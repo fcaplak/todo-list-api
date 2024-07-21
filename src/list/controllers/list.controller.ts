@@ -104,7 +104,6 @@ export class ListController {
     @Req() req: Request,
   ): Promise<ItemResponseDto> {
     const user = req.user as UserEntity;
-    console.log(user);
     return this.itemService.createItem({ listId, ...createItemDto, user });
   }
 

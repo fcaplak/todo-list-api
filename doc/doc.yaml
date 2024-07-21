@@ -1,0 +1,363 @@
+openapi: 3.0.0
+paths:
+  /auth/login:
+    post:
+      operationId: AuthController_signIn
+      summary: User login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '200':
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponseDto'
+        '401':
+          description: Unauthorized
+      tags:
+        - Authentication
+  /auth/register:
+    post:
+      operationId: AuthController_signUp
+      summary: User register
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponseDto'
+      tags:
+        - Authentication
+  /lists:
+    post:
+      operationId: ListController_createList
+      summary: Create a new todo list
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateListDto'
+      responses:
+        '201':
+          description: List created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateListResponseDto'
+        '401':
+          description: Unauthorized
+      tags:
+        - List
+      security:
+        - access-token: []
+    get:
+      operationId: ListController_getLists
+      summary: Returns lists with items
+      parameters: []
+      responses:
+        '200':
+          description: Returned list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListResponseDto'
+      tags:
+        - List
+  /lists/{listId}:
+    get:
+      operationId: ListController_getList
+      summary: Returns specific list with items
+      parameters:
+        - name: listId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returned list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListResponseDto'
+      tags:
+        - List
+  /lists/{listId}/items:
+    post:
+      operationId: ListController_createItem
+      summary: Creates a new item in list
+      parameters:
+        - name: listId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemDto'
+      responses:
+        '201':
+          description: Created item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponseDto'
+        '401':
+          description: Unauthorized
+      tags:
+        - List
+      security:
+        - access-token: []
+  /lists/{listId}/share:
+    patch:
+      operationId: ListController_shareList
+      summary: Shares todo list with another user
+      parameters:
+        - name: listId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShareListDto'
+      responses:
+        '200':
+          description: Shared list successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListResponseDto'
+        '401':
+          description: Unauthorized
+      tags:
+        - List
+      security:
+        - access-token: []
+  /items/{itemId}:
+    get:
+      operationId: ItemController_getItem
+      summary: Returns specific item
+      parameters:
+        - name: itemId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returned item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponseDto'
+      tags:
+        - Item
+  /items/{itemId}/flag:
+    patch:
+      operationId: ItemController_updateFlag
+      summary: Updates item flag
+      parameters:
+        - name: itemId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemFlagDto'
+      responses:
+        '200':
+          description: Item flag updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponseDto'
+        '401':
+          description: Unauthorized
+      tags:
+        - Item
+      security:
+        - access-token: []
+info:
+  title: Todo List API
+  description: API documentation
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    access-token:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    UserDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    SignInResponseDto:
+      type: object
+      properties:
+        access_token:
+          type: string
+      required:
+        - access_token
+    SignUpResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+      required:
+        - id
+        - email
+    CreateListDto:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+      required:
+        - id
+        - email
+    CreateListResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponseDto'
+      required:
+        - id
+        - name
+        - users
+    ItemResponseDto:
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        deadline:
+          format: date-time
+          type: string
+        flag:
+          type: string
+          enum:
+            - ACTIVE
+            - DONE
+            - CANCELED
+        createdBy:
+          $ref: '#/components/schemas/UserResponseDto'
+      required:
+        - title
+        - text
+        - deadline
+        - flag
+        - createdBy
+    ListResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponseDto'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemResponseDto'
+      required:
+        - id
+        - name
+        - users
+        - items
+    CreateItemDto:
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        deadline:
+          format: date-time
+          type: string
+        flag:
+          type: string
+          enum:
+            - ACTIVE
+            - DONE
+            - CANCELED
+      required:
+        - title
+        - text
+        - deadline
+    ShareListDto:
+      type: object
+      properties:
+        collaboratorId:
+          type: string
+      required:
+        - collaboratorId
+    UpdateItemFlagDto:
+      type: object
+      properties:
+        flag:
+          type: string
+          enum:
+            - ACTIVE
+            - DONE
+            - CANCELED
+      required:
+        - flag
