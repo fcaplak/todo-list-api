@@ -10,8 +10,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 /**
- * Item module
- * @fileoverview - Item module
+ * Auth module
+ * @fileoverview - Auth module
  * @description - Module for authentication operations
  */
 @Module({

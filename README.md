@@ -1,4 +1,4 @@
-# Todo List API in NestJS
+# 📝 Todo List API
 
 NestJS+TypeORM+PostgresDB
 
