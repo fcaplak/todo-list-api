@@ -1,15 +1,17 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from 'src/auth/services/auth.service';
+import { UserDto } from 'src/user/dtos/user.dto';
+import {
+  SignInResponseDto,
+  SignUpResponseDto,
+} from 'src/auth/dtos/response.dto';
+import { Public } from 'src/auth/strategies/public.strategy';
 import {
   ApiOperation,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserDto } from '../../user/dtos/user.dto';
-import { SignInResponseDto, SignUpResponseDto } from '../dtos/response.dto';
-
-import { Public } from '../strategies/public.strategy';
 
 @Controller('auth')
 @ApiTags('Authentication')

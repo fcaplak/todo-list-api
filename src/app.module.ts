@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { ListModule } from './list/list.module';
-import { ItemModule } from './item/item.module';
-import { DatabaseModule } from './database/database.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { UserModule } from 'src/user/user.module';
+import { ListModule } from 'src/list/list.module';
+import { ItemModule } from 'src/item/item.module';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [DatabaseModule, AuthModule, UserModule, ListModule, ItemModule],

@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { ItemEntity } from '../../item/entities/item.entity';
-import { UserEntity } from '../../user/entities/user.entity';
+import { ItemEntity } from 'src/item/entities/item.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Entity('list')
 export class ListEntity {

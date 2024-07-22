@@ -5,7 +5,7 @@ import {
   IsEnum,
   IsDateString,
 } from 'class-validator';
-import { ItemFlag } from '../enums/item-flag.enum';
+import { ItemFlag } from 'src/item/enums/item-flag.enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateItemDto {

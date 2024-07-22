@@ -1,4 +1,4 @@
-import { ListEntity } from '../../list/entities/list.entity';
+import { ListEntity } from 'src/list/entities/list.entity';
 import {
   Column,
   CreateDateColumn,
@@ -23,7 +23,7 @@ export class UserEntity {
 
   @ManyToMany(() => ListEntity, (list) => list.users)
   @JoinTable({
-    name: 'person_lists',
+    name: 'person_list',
     joinColumn: { name: 'userId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'listId', referencedColumnName: 'id' },
   })

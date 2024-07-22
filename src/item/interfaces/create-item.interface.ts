@@ -1,4 +1,4 @@
-import { ItemFlag } from '../enums/item-flag.enum';
+import { ItemFlag } from 'src/item/enums/item-flag.enum';
 import { UserEntity } from 'src/user/entities/user.entity';
 
 export interface ICreateItem {

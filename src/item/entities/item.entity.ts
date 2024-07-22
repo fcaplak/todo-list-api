@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { ListEntity } from '../../list/entities/list.entity';
-import { UserEntity } from '../../user/entities/user.entity';
+import { ListEntity } from 'src/list/entities/list.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { ItemFlag } from 'src/item/enums/item-flag.enum';
 
 @Entity('item')

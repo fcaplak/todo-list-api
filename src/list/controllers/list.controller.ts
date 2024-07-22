@@ -11,8 +11,20 @@ import {
   ParseUUIDPipe,
   Patch,
 } from '@nestjs/common';
-import { ListService } from '../services/list.service';
-import { CreateListDto } from '../dtos/create-list.dto';
+import { ListService } from 'src/list/services/list.service';
+import { CreateListDto } from 'src/list/dtos/create-list.dto';
+import { Request } from 'express';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { Public } from 'src/auth/strategies/public.strategy';
+import { CreateItemDto } from 'src/item/dtos/create-item.dto';
+import { ShareListDto } from 'src/list/dtos/share-list.dto';
+import { ItemService } from 'src/item/services/item.service';
+import { ItemResponseDto } from 'src/item/dtos/response.dto';
+import {
+  CreateListResponseDto,
+  ListResponseDto,
+} from 'src/list/dtos/response.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -20,16 +32,6 @@ import {
   ApiBearerAuth,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Request } from 'express';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { Public } from 'src/auth/strategies/public.strategy';
-import { UUID } from 'crypto';
-import { CreateItemDto } from 'src/item/dtos/create-item.dto';
-import { ShareListDto } from 'src/list/dtos/share-list.dto';
-import { ItemService } from 'src/item/services/item.service';
-import { ItemResponseDto } from 'src/item/dtos/response.dto';
-import { CreateListResponseDto, ListResponseDto } from '../dtos/response.dto';
 
 @ApiTags('List')
 @Controller('lists')
@@ -43,7 +45,7 @@ export class ListController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Create a new todo list' })
+  @ApiOperation({ summary: 'Creates a new todo list' })
   @ApiResponse({
     status: 201,
     description: 'List created successfully',
@@ -51,11 +53,11 @@ export class ListController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async createList(
-    @Body() createListDto: CreateListDto,
+    @Body() list: CreateListDto,
     @Req() req: Request,
   ): Promise<CreateListResponseDto> {
     const user = req.user as UserEntity;
-    return this.listService.createList({ ...createListDto, user });
+    return this.listService.createList({ ...list, user });
   }
 
   @Public()
@@ -82,7 +84,7 @@ export class ListController {
     type: ListResponseDto,
   })
   async getList(
-    @Param('listId', ParseUUIDPipe) listId: UUID,
+    @Param('listId', ParseUUIDPipe) listId: string,
   ): Promise<ListResponseDto> {
     return this.listService.getList(listId);
   }
@@ -99,12 +101,12 @@ export class ListController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async createItem(
-    @Param('listId', ParseUUIDPipe) listId: UUID,
-    @Body() createItemDto: CreateItemDto,
+    @Param('listId', ParseUUIDPipe) listId: string,
+    @Body() item: CreateItemDto,
     @Req() req: Request,
   ): Promise<ItemResponseDto> {
     const user = req.user as UserEntity;
-    return this.itemService.createItem({ listId, ...createItemDto, user });
+    return this.itemService.createItem({ listId, ...item, user });
   }
 
   @UseGuards(AuthGuard)
@@ -119,11 +121,11 @@ export class ListController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async shareList(
-    @Param('listId', ParseUUIDPipe) listId: UUID,
-    @Body() shareListDto: ShareListDto,
+    @Param('listId', ParseUUIDPipe) listId: string,
+    @Body() shareList: ShareListDto,
     @Req() req: Request,
   ): Promise<ListResponseDto> {
     const user = req.user as UserEntity;
-    return this.listService.shareList({ listId, ...shareListDto, user });
+    return this.listService.shareList({ listId, ...shareList, user });
   }
 }

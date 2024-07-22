@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ItemFlag } from '../enums/item-flag.enum';
+import { ItemFlag } from 'src/item/enums/item-flag.enum';
 import { IsEnum } from 'class-validator';
 import { UserResponseDto } from 'src/user/dtos/response.dto';
 
 export class ItemResponseDto {
+  @ApiProperty()
+  id: string;
+
   @ApiProperty()
   title: string;
 

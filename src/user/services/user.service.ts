@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { ICreateUserResponse } from 'src/user/interfaces/response.interface';
-import { IUserCredentials } from '../interfaces/user.interface';
+import { IUserResponse } from 'src/user/interfaces/response.interface';
+import { IUserCredentials } from 'src/user/interfaces/user.interface';
 import { omit } from 'lodash';
 
 @Injectable()
@@ -13,27 +13,29 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  public async findOne(
+  async findOne(
     email: string,
     fields: (keyof UserEntity)[],
   ): Promise<UserEntity | undefined> {
-    return await this.userRepository.findOne({
+    return await this.userRepository.findOneOrFail({
       select: fields,
       where: { email },
     });
   }
 
-  public async findOneBy(id: string): Promise<UserEntity | undefined> {
+  async findOneById(
+    id: string,
+    throwOnFail: boolean = false,
+  ): Promise<UserEntity | undefined> {
+    if (throwOnFail) return await this.userRepository.findOneByOrFail({ id });
     return await this.userRepository.findOneBy({ id });
   }
 
-  public async findOneByEmail(email: string): Promise<UserEntity | undefined> {
+  async findOneByEmail(email: string): Promise<UserEntity | undefined> {
     return await this.userRepository.findOneBy({ email });
   }
 
-  public async create(
-    userPayload: IUserCredentials,
-  ): Promise<ICreateUserResponse> {
+  async create(userPayload: IUserCredentials): Promise<IUserResponse> {
     const user = await this.userRepository.save(userPayload);
     return omit(user, ['password']);
   }

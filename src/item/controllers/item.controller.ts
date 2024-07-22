@@ -10,7 +10,13 @@ import {
   Body,
   Req,
 } from '@nestjs/common';
-import { ItemService } from '../services/item.service';
+import { ItemService } from 'src/item/services/item.service';
+import { Public } from 'src/auth/strategies/public.strategy';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Request } from 'express';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { ItemResponseDto } from 'src/item/dtos/response.dto';
+import { UpdateItemFlagDto } from 'src/item/dtos/update-item-flag.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -18,13 +24,6 @@ import {
   ApiUnauthorizedResponse,
   ApiResponse,
 } from '@nestjs/swagger';
-import { UUID } from 'crypto';
-import { Public } from 'src/auth/strategies/public.strategy';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { UpdateItemFlagDto } from '../dtos/update-item-flag.dto';
-import { Request } from 'express';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { ItemResponseDto } from '../dtos/response.dto';
 
 @ApiTags('Item')
 @Controller('items')
@@ -41,7 +40,7 @@ export class ItemController {
     type: ItemResponseDto,
   })
   async getItem(
-    @Param('itemId', ParseUUIDPipe) itemId: UUID,
+    @Param('itemId', ParseUUIDPipe) itemId: string,
   ): Promise<ItemResponseDto> {
     return this.itemService.getItem(itemId);
   }
@@ -58,7 +57,7 @@ export class ItemController {
     type: ItemResponseDto,
   })
   async updateFlag(
-    @Param('itemId') itemId: UUID,
+    @Param('itemId', ParseUUIDPipe) itemId: string,
     @Body() updateItemFlag: UpdateItemFlagDto,
     @Req() req: Request,
   ): Promise<ItemResponseDto> {

@@ -6,16 +6,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ListEntity } from '../entities/list.entity';
-import { UUID } from 'crypto';
+import { ListEntity } from 'src/list/entities/list.entity';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { UserService } from 'src/user/services/user.service';
 import {
   ICreateListResponse,
   IListResponse,
 } from '../interfaces/response.interface';
-import { ICreateList } from '../interfaces/create-list.interface';
-import { IShareList } from '../interfaces/share-list.interface';
+import { ICreateList } from 'src/list/interfaces/create-list.interface';
+import { IShareList } from 'src/list/interfaces/share-list.interface';
 
 @Injectable()
 export class ListService {
@@ -36,7 +35,7 @@ export class ListService {
     });
   }
 
-  async getList(listId: UUID): Promise<IListResponse> {
+  async getList(listId: string): Promise<IListResponse> {
     try {
       return await this.listRepository.findOneOrFail({
         where: { id: listId },
@@ -59,7 +58,7 @@ export class ListService {
         where: { id: listId },
         relations: ['users'],
       }),
-      this.userService.findOneBy(collaboratorId),
+      this.userService.findOneById(collaboratorId),
     ]);
 
     if (!list) {
@@ -69,11 +68,17 @@ export class ListService {
       throw new NotFoundException('Collaborator not found');
     }
 
-    if (!list.users.some((listUser) => listUser.id === user.id)) {
+    const hasUserPermission = list.users.some(
+      (listUser) => listUser.id === user.id,
+    );
+    if (!hasUserPermission) {
       throw new ForbiddenException('User has no permission to share list');
     }
 
-    if (list.users.some((listUser) => listUser.id === collaboratorId)) {
+    const isCollaboratorInList = list.users.some(
+      (listUser) => listUser.id === collaboratorId,
+    );
+    if (isCollaboratorInList) {
       throw new ConflictException('Collaborator is already in the list');
     }
 

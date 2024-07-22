@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ItemService } from './services/item.service';
-import { ItemController } from './controllers/item.controller';
+import { ItemService } from 'src/item/services/item.service';
+import { ItemController } from 'src/item/controllers/item.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ItemEntity } from './entities/item.entity';
+import { ItemEntity } from 'src/item/entities/item.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ListEntity } from 'src/list/entities/list.entity';
 import { UserService } from 'src/user/services/user.service';

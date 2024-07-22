@@ -1,9 +1,8 @@
 import { ItemFlag } from '../enums/item-flag.enum';
-import { UUID } from 'crypto';
 import { UserEntity } from 'src/user/entities/user.entity';
 
 export interface IUpdateItemFlag {
-  itemId: UUID;
+  itemId: string;
   flag: ItemFlag;
   user: UserEntity;
 }

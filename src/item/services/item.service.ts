@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError, Repository } from 'typeorm';
-import { ItemEntity } from '../entities/item.entity';
+import { ItemEntity } from 'src/item/entities/item.entity';
 import { ListEntity } from 'src/list/entities/list.entity';
 import { IUpdateItemFlag } from 'src/item/interfaces/update-item-flag.interface';
-import { IItemResponse } from '../interfaces/response.interface';
-import { ICreateItem } from '../interfaces/create-item.interface';
+import { IItemResponse } from 'src/item/interfaces/response.interface';
+import { ICreateItem } from 'src/item/interfaces/create-item.interface';
 
 @Injectable()
 export class ItemService {

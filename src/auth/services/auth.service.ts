@@ -3,12 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from '../../user/services/user.service';
+import { UserService } from 'src/user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { hashPassword, comparePassword } from '../../utils/bcrypt.util';
+import { hashPassword, comparePassword } from 'src/utils/bcrypt.util';
 import { IJwtResponse } from 'src/auth/interfaces/response.interface';
 import { IUserCredentials } from 'src/user/interfaces/user.interface';
-import { ICreateUserResponse } from 'src/user/interfaces/response.interface';
+import { IUserResponse } from 'src/user/interfaces/response.interface';
 
 @Injectable()
 export class AuthService {
@@ -17,10 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async signIn({
-    email,
-    password,
-  }: IUserCredentials): Promise<IJwtResponse> {
+  async signIn({ email, password }: IUserCredentials): Promise<IJwtResponse> {
     try {
       const user = await this.userService.findOne(email, [
         'id',
@@ -40,7 +37,7 @@ export class AuthService {
     }
   }
 
-  public async signUp(payload: IUserCredentials): Promise<ICreateUserResponse> {
+  async signUp(payload: IUserCredentials): Promise<IUserResponse> {
     const existingUser = await this.userService.findOneByEmail(payload.email);
     if (existingUser) {
       throw new BadRequestException('Email is already in use');

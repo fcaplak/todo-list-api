@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from '../strategies/public.strategy';
+import { IS_PUBLIC_KEY } from 'src/auth/strategies/public.strategy';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/services/user.service';
 
@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
       });
 
-      const user = await this.userService.findOneBy(payload.id);
+      const user = await this.userService.findOneById(payload.id, true);
       request['user'] = user;
     } catch {
       throw new UnauthorizedException();
