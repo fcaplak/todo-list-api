@@ -16,8 +16,13 @@ To get the API up and running, follow these steps:
    git clone https://github.com/fcaplak/todo-list-api/
    cd todo-list-api
    ```
+2. Create .env file (default values are set for docker postgres connection):
 
-2. Start the application using Docker Compose:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Start the application using Docker Compose:
 
    ```bash
    docker-compose up
